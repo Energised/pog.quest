@@ -6,12 +6,10 @@
 # - Pull the headline and summary of each article
 # - Put these into a dictionary/json file
 
+import itertools
 import requests
 #from bs4 import BeautifulSoup
 from SoupFactory import SoupFactory
-
-#websites = {"bbc" : "https://www.bbc.co.uk/news/uk",
-#            "vice" : ""}
 
 #page = requests.get(websites["bbc"])
 
@@ -23,9 +21,6 @@ from SoupFactory import SoupFactory
 #for p_tag in soup.find_all('p', class_="gs-c-promo-summary"):
 #    print(p_tag.get_text())
 
-websites = {"bbc" : "https://www.bbc.co.uk/news/uk",
-            "msn" : "https://www.msn.com/en-gb/"}
-
 msn_filter = ["Home", "News", "Weather", "Entertainment", "Sport", "esports",
               "Money", "Lifestyle", "Horoscopes", "Health & Fitness", "Food & Drink",
               "Cars", "Travel", "Dating", "Sponsored:"]
@@ -33,23 +28,22 @@ msn_filter = ["Home", "News", "Weather", "Entertainment", "Sport", "esports",
 class HeadlineScraper:
 
     def __init__(self):
-        self.headlines = [];
-        self.websites = {"bbc" : "https://www.bbc.co.uk/news/uk",
-                         "msn" : "https://www.msn.com/en-gb/",
-                         "huff" : "https://www.huffingtonpost.co.uk/news/"}
+        self.headlines = []
+        self.headlines_and_taglines = {}
+        self.factory = SoupFactory()
 
     # only gives headlines, no access to extra content unless i follow the rabbithole
     def scrape_headlines_bbc(self):
-        page = requests.get(self.websites["bbc"])
-        soup = SoupFactory(page.content, 'html.parser')
+        #page = requests.get(self.websites["bbc"])
+        soup = self.factory.serve_soup("bbc")
         for p_tag in soup.find_all('p', class_="gs-c-promo-summary"):
             self.headlines.append(p_tag.get_text())
 
     # as with bbc will only scrape headlines
     # but also has to filter out the crap
     def scrape_headlines_msn(self):
-        page = requests.get(self.websites["msn"])
-        soup = SoupFactory(page.content, 'html.parser')
+        #page = requests.get(self.websites["msn"])
+        soup = self.factory.serve_soup("msn")
         content = soup.find_all('li')
         content_text = []
         for item in content:
@@ -57,9 +51,19 @@ class HeadlineScraper:
         filtered = [h for h in content_text if not any(filter in h for filter in msn_filter)]
         tidied = [self.headlines.append(h.strip("\n\r")) for h in filtered]
 
+    # this will return headlines and taglines
     def scrape_headlines_huff(self):
-        page = requests.get(self.websites["huff"])
-        soup = SoupFactory(page.content, 'html.parser')
+        soup = self.factory.serve_soup("huff")
+        # get div where class = card__text
+        headline_content = soup.find_all('h2', class_ = "card__headline__text")
+        tagline_content = soup.find_all('div', class_ = "card__description")
+        zipped = zip(headline_content, tagline_content)
+        for h, t in zipped:
+            self.headlines_and_taglines[h.get_text()] = t.get_text()
+
+        #todo
+    def scrape_headlines_wpost(self):
+        soup = self.factory.serve_soup("wpost")
         print(soup.prettify())
 
 
@@ -67,5 +71,7 @@ if __name__ == "__main__":
     scraper = HeadlineScraper()
     scraper.scrape_headlines_bbc()
     scraper.scrape_headlines_msn()
-    print(*scraper.headlines, sep="\n")
-    #scraper.scrape_headlines_huff()
+    scraper.scrape_headlines_huff()
+    #print(*scraper.headlines, sep="\n")
+    for key, value in scraper.headlines_and_taglines.items():
+        print(key + ": " + value)
