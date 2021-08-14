@@ -6,8 +6,8 @@ This is more of a playground to mess around with some ideas. Current tasks liste
 
 - Find more sites to add to SoupFactory
 - Pull out headline and tagline info for wpost
-- Find a lib for image-text generation with Python
 - See about requesting fonts directly from fonts.google.com
+- Look at overlaying one image onto another in PIL
 
 ## Learning Javascript
 
@@ -32,3 +32,14 @@ Purpose: To have a string be displayed on top of another image with a random fon
 from inside PIL or from fonts.google.com
 
 Requirements: pillow (PIL - Python Imaging Library)  
+
+Planning Steps:
+
+- Use Google Fonts API to generate a JSON file containing all font names and URLs for the fonts they host
+- This can be used for an auto-complete search system on the website to select a font
+- Once user has selected a font, we can pull the .ttf file into a PIL.ImageFont object
+- This can be used to generate a text image where the text comes from the files in news-scraper/
+- At this point, I don't know exactly how I can do this but here's what I want:
+  - Bring the cut image of Henry Winkler into PIL
+  - Insert the text image onto the Winkler picture in the appropriate position
+  - Export this new image to an output folder
