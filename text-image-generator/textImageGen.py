@@ -8,6 +8,10 @@ import requests
 
 from PIL import Image
 
+# setup for website, so won't work locally
+# will generate a new one for local use that I won't keep here
+# since exposing an API key unrestricted could be v bad
+
 API_KEY = "AIzaSyDAPrRgrQj9Pw9igcKD2boWBTfBBhBzIU8"
 
 GFONTS_URL = "https://www.googleapis.com/webfonts/v1/webfonts?key=%s" % (API_KEY)
