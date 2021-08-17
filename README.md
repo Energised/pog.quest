@@ -33,7 +33,7 @@ from inside PIL or from fonts.google.com
 
 Requirements: pillow (PIL - Python Imaging Library)  
 
-Planning Steps:
+### Planning Steps
 
 - Use Google Fonts API to generate a JSON file containing all font names and URLs for the fonts they host
 - This can be used for an auto-complete search system on the website to select a font
