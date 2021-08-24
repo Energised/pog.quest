@@ -44,7 +44,13 @@ class FontFetch:
     def get_random_ttf(self):
         font_family_index = randint(0, len(self.fonts_dict)-1)
         random_font_name = list(self.fonts_dict)[font_family_index]
-        font_variant_index =
+        #print(self.fonts_dict[random_font_name])
+        font_variant_index = randint(0, len(self.fonts_dict[random_font_name])-1)
+        #print(font_variant_index)
+        random_font_variant = list(self.fonts_dict[random_font_name])[font_variant_index]
+        #print(random_font_name)
+        #print(random_font_variant)
+        return self.get_ttf(random_font_name, random_font_variant)
 
     def search_test(self, family, variant = ""):
         if family in self.fonts_dict:
@@ -52,6 +58,6 @@ class FontFetch:
 
 if __name__ == "__main__":
     x = FontFetch()
-    x.search_test("Zen Loop")
+    #x.search_test("Zen Loop")
     font_1_path = x.get_ttf("Zen Loop", "regular")
-    x.get_random_ttf()
+    random_font_url = x.get_random_ttf()

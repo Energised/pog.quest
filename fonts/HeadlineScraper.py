@@ -70,7 +70,7 @@ class HeadlineScraper:
         soup = self.factory.serve_soup("wpost")
         print(soup.prettify())
 
-    def serve_headline(self):
+    def serve_random_headline(self):
         h_index = randint(0, len(self.headlines) - 1)
         #print(h_index)
         return self.headlines[h_index]
