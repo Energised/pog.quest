@@ -5,6 +5,7 @@
 
 from HeadlineScraper import HeadlineScraper
 from FontFetch import FontFetch
+from ImageGenerator import ImageGenerator
 
 if __name__ == "__main__":
     scraper = HeadlineScraper()
@@ -14,3 +15,6 @@ if __name__ == "__main__":
     random_font = font_fetch.get_random_ttf()
     print(random_headline)
     print(random_font)
+    # now we can generate the Image
+    image = ImageGenerator(random_font, random_headline)
+    image.display()
