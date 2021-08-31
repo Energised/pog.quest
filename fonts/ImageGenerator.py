@@ -12,9 +12,7 @@
 #       - this will then save the image to img/out/
 #       - return the path to this image for use on website
 #
-# - having now found the image_utils class on Github
-#   - think I will subclass this and add in extra functions
-#
+# image_utils just wasn't working so i'm building it myself
 #
 #
 
@@ -35,7 +33,8 @@ class ImageGenerator:
         self.font = self.get_font_obj(font_path)
         self.headline = headline
         self.lines = self.generate_lines()
-        self.generate_text_on_image(headline)
+        #self.generate_text_on_image(headline)
+        self.draw_text_on_image("center")
 
     def get_image(self, path):
         im = Image.open(path)
@@ -53,34 +52,37 @@ class ImageGenerator:
         words = [w for w in self.headline.split(" ") if w]
         chars = [c for c in self.headline]
         total_chars = len(chars)
-        print("total_chars = " + str(total_chars))
-        print(words)
         # number of pixels in width and height of 1 character
-        font_pixel_width = self.font_size_pt * c.POINT_PX_CR
+        #font_pixel_width = round(self.font_size_pt * c.POINT_PX_CR)
+        font_pixel_width = self.font.getsize("a")[0]
         max_chars_per_line = round((self.im_width - padding) / font_pixel_width)
-        print("max_chars_per_line = " + str(max_chars_per_line))
-
+        print(self.im_width)
         lines = []
         ptr = max_chars_per_line
         last_ptr = 0
-        #print("ptr=" + str(ptr))
-        print("total_chars=" + str(total_chars))
         while ptr <= total_chars:
-            print("ptr=" + str(ptr))
             if chars[ptr] == " ":
                 lines.append(''.join(str(e) for e in chars[last_ptr:ptr]))
             else:
                 while chars[ptr] != " ":
                     ptr -= 1;
-                    print(ptr)
-                    print(chars[ptr])
                 lines.append(''.join(str(e) for e in chars[last_ptr:ptr]))
             last_ptr = ptr + 1
             ptr += max_chars_per_line
         lines.append(''.join(str(e) for e in chars[last_ptr:total_chars]))
-
-        print(lines)
         return lines
+
+    def draw_text_on_image(self, justify, padding=20):
+        # justify could be either 'left', 'right', 'center'
+        #font_pixel_size = self.font_size_pt * c.POINT_PX_CR
+        font_pixel_width, font_pixel_height = self.font.getsize("a")
+        for counter, line in enumerate(self.lines):
+            line_width_pixels = len(line) * font_pixel_width
+            if justify == "center":
+                start_x = (self.im_width/2) - ((line_width_pixels)/2)
+                start_y = (font_pixel_height * (counter + 1)) + 10
+                self.draw.text((start_x, start_y), line, font=self.font, fill="black")
+
 
 
     # currently this will be hardcoded for one image
@@ -93,4 +95,4 @@ class ImageGenerator:
 
 if __name__ == "__main__":
     x = ImageGenerator("fonts/alike_regular.ttf", 28, "Boris Johnson has shat himself... again.")
-    x.generate_lines()
+    x.display()
