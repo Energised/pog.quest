@@ -32,7 +32,7 @@ class ImageGenerator:
         self.draw = self.get_draw_obj()
         self.font = self.get_font_obj(font_path)
         self.headline = headline
-        self.lines = self.generate_lines()
+        self.lines = self.new_generate_lines()
         #self.generate_text_on_image(headline)
         self.draw_text_on_image("center")
 
@@ -72,18 +72,37 @@ class ImageGenerator:
         lines.append(''.join(str(e) for e in chars[last_ptr:total_chars]))
         return lines
 
+    # much smaller and easier way to generate lines
+    # using font.getsize and overriding the char list
+    def new_generate_lines(self, padding=20):
+        chars = [c for c in self.headline]
+        total_chars = len(chars)
+        lines = []
+        ptr = 0
+        while ptr <= total_chars:
+            total_width = 0
+            for char in chars:
+                if(total_width >= (self.im_width - padding)):
+                    lines.append(''.join(str(e) for e in chars[:ptr]))
+                    chars = chars[ptr:]
+                    break
+                total_width += self.font.getsize(char)[0]
+                ptr += 1
+        lines.append(''.join(str(e) for e in chars[:total_chars]))
+        return lines
+
     def draw_text_on_image(self, justify, padding=20):
         # justify could be either 'left', 'right', 'center'
         #font_pixel_size = self.font_size_pt * c.POINT_PX_CR
-        font_pixel_width, font_pixel_height = self.font.getsize("a")
         for counter, line in enumerate(self.lines):
-            line_width_pixels = len(line) * font_pixel_width
+            font_pixel_width, font_pixel_height = self.font.getsize(line)
+            print("lwp = " + str(font_pixel_width))
             if justify == "center":
-                start_x = (self.im_width/2) - ((line_width_pixels)/2)
-                start_y = (font_pixel_height * (counter + 1)) + 10
+                start_x = (self.im_width/2) - ((font_pixel_width)/2)
+                print(start_x)
+                start_y = (font_pixel_height * (counter)) + 20
+                print(start_y)
                 self.draw.text((start_x, start_y), line, font=self.font, fill="black")
-
-
 
     # currently this will be hardcoded for one image
     # so position of text and fill colour are pre-set
@@ -94,5 +113,5 @@ class ImageGenerator:
         self.im.show()
 
 if __name__ == "__main__":
-    x = ImageGenerator("fonts/alike_regular.ttf", 28, "Boris Johnson has shat himself... again.")
+    x = ImageGenerator("fonts/caveat_600.ttf", 28, "A destruction order is carried out on the alpaca that tested positive for bovine TB.")
     x.display()
