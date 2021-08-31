@@ -4,10 +4,7 @@
 # Copyright 2011 Álvaro Justen [alvarojusten at gmail dot com]
 # License: GPL <http://www.gnu.org/copyleft/gpl.html>
 
-import Image
-import ImageDraw
-import ImageFont
-
+from PIL import Image, ImageDraw, ImageFont
 
 class ImageText(object):
     def __init__(self, filename_or_size, mode='RGBA', background=(0, 0, 0, 0),
@@ -42,7 +39,7 @@ class ImageText(object):
             font_size += 1
             text_size = self.get_text_size(font, font_size, text)
 
-    def write_text(self, (x, y), text, font_filename, font_size=11,
+    def write_text(self, x, y, text, font_filename, font_size=11,
                    color=(0, 0, 0), max_width=None, max_height=None):
         if isinstance(text, str):
             text = text.decode(self.encoding)
@@ -63,7 +60,7 @@ class ImageText(object):
         font = ImageFont.truetype(font_filename, font_size)
         return font.getsize(text)
 
-    def write_text_box(self, (x, y), text, box_width, font_filename,
+    def write_text_box(self, x, y, text, box_width, font_filename,
                        font_size=11, color=(0, 0, 0), place='left',
                        justify_last_line=False):
         lines = []
@@ -85,23 +82,23 @@ class ImageText(object):
         for index, line in enumerate(lines):
             height += text_height
             if place == 'left':
-                self.write_text((x, height), line, font_filename, font_size,
+                self.write_text(x, height, line, font_filename, font_size,
                                 color)
             elif place == 'right':
                 total_size = self.get_text_size(font_filename, font_size, line)
                 x_left = x + box_width - total_size[0]
-                self.write_text((x_left, height), line, font_filename,
+                self.write_text(x_left, height, line, font_filename,
                                 font_size, color)
             elif place == 'center':
                 total_size = self.get_text_size(font_filename, font_size, line)
                 x_left = int(x + ((box_width - total_size[0]) / 2))
-                self.write_text((x_left, height), line, font_filename,
+                self.write_text(x_left, height, line, font_filename,
                                 font_size, color)
             elif place == 'justify':
                 words = line.split()
                 if (index == len(lines) - 1 and not justify_last_line) or \
                    len(words) == 1:
-                    self.write_text((x, height), line, font_filename, font_size,
+                    self.write_text(x, height, line, font_filename, font_size,
                                     color)
                     continue
                 line_without_spaces = ''.join(words)
@@ -110,7 +107,7 @@ class ImageText(object):
                 space_width = (box_width - total_size[0]) / (len(words) - 1.0)
                 start_x = x
                 for word in words[:-1]:
-                    self.write_text((start_x, height), word, font_filename,
+                    self.write_text(start_x, height, word, font_filename,
                                     font_size, color)
                     word_size = self.get_text_size(font_filename, font_size,
                                                     word)
@@ -118,6 +115,6 @@ class ImageText(object):
                 last_word_size = self.get_text_size(font_filename, font_size,
                                                     words[-1])
                 last_word_x = x + box_width - last_word_size[0]
-                self.write_text((last_word_x, height), words[-1], font_filename,
+                self.write_text(last_word_x, height, words[-1], font_filename,
                                 font_size, color)
         return (box_width, height - y)

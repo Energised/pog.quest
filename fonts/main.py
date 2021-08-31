@@ -16,5 +16,8 @@ if __name__ == "__main__":
     print(random_headline)
     print(random_font)
     # now we can generate the Image
-    image = ImageGenerator(random_font, random_headline)
-    image.display()
+    font_size_pt = 28
+    image = ImageGenerator(random_font, font_size_pt, random_headline)
+    image.generate_lines()
+    #image.display()
+    #print(str(image.im_width) + ", " + str(image.im_height))
