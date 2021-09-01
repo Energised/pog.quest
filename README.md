@@ -2,13 +2,6 @@
 
 This is more of a playground to mess around with some ideas. Current tasks listed below:
 
-## Tasks
-
-- Find more sites to add to SoupFactory
-- Pull out headline and tagline info for wpost
-- See about requesting fonts directly from fonts.google.com
-- Look at overlaying one image onto another in PIL
-
 ## Learning Javascript
 
 ### Chapter 2: JS Development Tools
@@ -20,26 +13,49 @@ This is more of a playground to mess around with some ideas. Current tasks liste
 
 - Data types deep dive, most of this I already know so skimmed a lot of this chapter
 
+---
 
-## news-scraper
+## fonts\
 
-Purpose: To pull headline and tagline data from multiple news websites for later processing
+Toolchain to scrape headlines from various news sources, use the Google Fonts API to get a list
+of their entire Font catalogue and pull specific font files and bring both of those into a PIL
+image to draw the headline onto an image given a font file.
+
+### HeadlineScraper.py and SoupFactory.py
+
+Pulls headline and tagline data from multiple news websites.
 Requirements: requests, bs4 (BeautifulSoup)
 
-## img-processor
+- [] Add more news websites to the scraper
+- [] Read into the bs4 documentation, see what interesting stuff there is
 
-Purpose: To have a string be displayed on top of another image with a random font either taken
-from inside PIL or from fonts.google.com
+### ImageGenerator.py
+
+To have a string be displayed on top of an image either user defined or pulled from some
+web source. Also handles formatting and justification of text to fit within the images size.
+
+- [] Add option for user defined font size
+- [] Allow users to choose font family variants
 
 Requirements: pillow (PIL - Python Imaging Library)  
 
+### FontFetch.py
+
+Sends a request to the Google Fonts API to get a list of their entire Font library including URLs
+for each font family and variant. It can then pull a given fonts file, store it locally and pass it
+to the ImageGenerator.
+
+- [] Create a search system to navigate through the font library data
+- [] Create auto-suggestion system for the search
+
 ### Planning Steps
 
-- Use Google Fonts API to generate a JSON file containing all font names and URLs for the fonts they host
-- This can be used for an auto-complete search system on the website to select a font
-- Once user has selected a font, we can pull the .ttf file into a PIL.ImageFont object
-- This can be used to generate a text image where the text comes from the files in news-scraper/
-- At this point, I don't know exactly how I can do this but here's what I want:
-  - Bring the cut image of Henry Winkler into PIL
-  - Insert the text image onto the Winkler picture in the appropriate position
-  - Export this new image to an output folder
+- [x] Use Google Fonts API to generate a JSON file containing all font names and URLs for the fonts they host
+- [] This can be used for an auto-complete search system on the website to select a font
+- [x] Once user has selected a font, we can pull the .ttf file into a PIL.ImageFont object
+- [x] This can be used to generate a text image where the text comes from the files in news-scraper/
+
+- [] Build a basic web interface using Flask
+- [] Incorporate the fonts\ library into the webpage
+- [] Add auto-deletion system for generated images and font files after a given period of time
+- [] Look at minimising HeadlineScrapers requests by caching the headlines dict and updating it at certain times
