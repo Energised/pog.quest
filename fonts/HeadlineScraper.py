@@ -11,6 +11,7 @@ import itertools
 import requests
 #from bs4 import BeautifulSoup
 from SoupFactory import SoupFactory
+from functools import lru_cache
 
 #page = requests.get(websites["bbc"])
 
@@ -74,6 +75,9 @@ class HeadlineScraper:
         h_index = randint(0, len(self.headlines) - 1)
         #print(h_index)
         return self.headlines[h_index]
+
+    def get_all_headlines(self):
+        return self.headlines
 
 
 

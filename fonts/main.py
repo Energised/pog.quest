@@ -9,6 +9,7 @@ from ImageGenerator import ImageGenerator
 
 if __name__ == "__main__":
     scraper = HeadlineScraper()
+    #print(scraper.get_all_headlines())
     font_fetch = FontFetch()
     # setup random headling and font
     random_headline = scraper.serve_random_headline()
@@ -20,4 +21,5 @@ if __name__ == "__main__":
     image = ImageGenerator(random_font, font_size_pt, random_headline)
     #image.generate_lines()
     image.display()
+    #image.save()
     #print(str(image.im_width) + ", " + str(image.im_height))
