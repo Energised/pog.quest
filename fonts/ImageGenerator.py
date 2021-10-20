@@ -17,7 +17,6 @@
 #
 
 from datetime import datetime
-from image_utils import ImageText
 from PIL import Image, ImageFont, ImageDraw
 
 import string
@@ -38,8 +37,8 @@ class ImageGenerator:
         self.headline = headline
         self.lines = self.generate_lines()
         #self.generate_text_on_image(headline)
-        self.draw_text_on_image("right")
-        #self.save()
+        self.draw_text_on_image("center")
+        self.save()
 
     def get_image(self, path):
         im = Image.open(path)
